@@ -1,0 +1,46 @@
+topic:
+  name: testTopic
+  partitions-num: 2
+  replication-factor: 1
+server:
+  port: 9090
+spring:
+  kafka:
+    topics: testTopic
+
+    bootstrap-servers:
+      - localhost:9092
+    properties:
+      schema.registry.url: http://localhost:8081
+
+    consumer:
+      group-id: interceptor-app
+      auto-offset-reset: latest
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+        confluent:
+          monitoring:
+            interceptor:
+              publishMs: 1000
+
+
+    producer:
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+        confluent:
+          monitoring:
+            interceptor:
+              publishMs: 1000
+
+
+    template:
+      default-topic:
+
+logging:
+  level:
+    root: info

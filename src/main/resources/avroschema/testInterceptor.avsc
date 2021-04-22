@@ -1,0 +1,51 @@
+{
+  "namespace": "io.confluent.developer",
+  "type": "record",
+  "name": "InterceptTest",
+  "fields": [
+    {
+      "name": "req_custid",
+      "type": "int"
+    },
+    {
+      "name": "req_message",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "req_json",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "req_remote_addr",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "req_uri",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "req_headers",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "req_method",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "result_json",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "result_post",
+      "type": "string",
+      "avro.java.string": "String"
+    }
+  ]
+}

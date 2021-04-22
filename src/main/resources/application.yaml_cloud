@@ -1,0 +1,75 @@
+topic:
+  name: testTopic
+  partitions-num: 2
+  replication-factor: 1
+server:
+  port: 9080
+
+# Kafka
+spring.kafka.properties.sasl.mechanism=PLAIN
+spring.kafka.properties.bootstrap.servers=pkc-ep9mm.us-east-2.aws.confluent.cloud:9092
+spring.kafka.properties.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username='{{ CLUSTER_API_KEY }}'   password='{{ CLUSTER_API_SECRET }}';
+spring.kafka.properties.security.protocol=SASL_SSL
+# Confluent Cloud Schema Registry
+spring.kafka.properties.basic.auth.credentials.source=USER_INFO
+spring.kafka.properties.basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
+spring.kafka.properties.schema.registry.url=https://{{ SR_ENDPOINT }}
+spring:
+  kafka:
+    topics: testTopic
+
+    bootstrap-servers:
+      #      - localhost:11091
+      - kafka.heinzx.ca:9092
+    properties:
+      #      schema.registry.url: https://localhost:8085
+      schema.registry.url: http://schemaregistry.heinzx.ca:80
+      #      schema.registry.url: http://ab818d650e5b648be8429d6e83d837fb-1816470654.us-east-2.elb.amazonaws.com:80
+
+      security.protocol: PLAINTEXT
+      ssl.keystore.password: confluent
+
+
+
+
+
+    consumer:
+      group-id: app
+      auto-offset-reset: latest
+      #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #      value-deserializer: io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer
+      #      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+        #        confluent.monitoring.interceptor.security.protocol: SSL
+        confluent.monitoring.interceptor.security.protocol: PLAINTEXT
+        confluent.monitoring.interceptor.ssl.truststore.location: /Users/heinz/opt/CP_Demo/cp-demo/scripts/security/kafka.appSA.truststore.jks
+        confluent.monitoring.interceptor.ssl.truststore.password: confluent
+        confluent.monitoring.interceptor.ssl.keystore.location: /Users/heinz/opt/CP_Demo/cp-demo/scripts/security/kafka.appSA.keystore.jks
+        confluent.monitoring.interceptor.ssl.keystore.password: confluent
+        confluent.monitoring.interceptor.ssl.key.password: confluent
+
+    producer:
+      #  key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #      key-serializer: io.confluent.kafka.serializers.IntegerSerializer
+      #      value-serializer: io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+        #        confluent.monitoring.interceptor.security.protocol: SSL
+        confluent.monitoring.interceptor.security.protocol: PLAINTEXT
+        confluent.monitoring.interceptor.ssl.truststore.location: /Users/heinz/opt/CP_Demo/cp-demo/scripts/security/kafka.appSA.truststore.jks
+        confluent.monitoring.interceptor.ssl.truststore.password: confluent
+        confluent.monitoring.interceptor.ssl.keystore.location: /Users/heinz/opt/CP_Demo/cp-demo/scripts/security/kafka.appSA.keystore.jks
+        confluent.monitoring.interceptor.ssl.keystore.password: confluent
+        confluent.monitoring.interceptor.ssl.key.password: confluent
+
+    template:
+      default-topic:
+
+logging:
+  level:
+    root: info
